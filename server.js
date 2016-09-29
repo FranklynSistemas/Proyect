@@ -21,8 +21,25 @@ app.get('/', function(req, res, next) {
   res.render('index');
 });
 
+app.get('/manual', function(req, res, next) {
+  res.render('ControlManual');
+});
+
 app.get('/video', function(req, res, next) {
   res.render('Video');
+});
+
+
+app.get('/vr', function(req, res, next) {
+  res.render('ControlVr');
+});
+
+app.get('/auto', function(req, res, next) {
+  res.render('Automatico');
+});
+
+app.get('/voz', function(req, res, next) {
+  res.render('voz'); // Control por Voz
 });
 
 app.get("*", function(req, res){
@@ -43,18 +60,21 @@ app.get('/video', function(req, res) {
 
 console.log('Servidor disponible en http://localhost:' + 3000);
 var motorA1, motorA2, motorB1,motorB2;
-
+var Distancia = 0,
+    DistanciaUser=0, 
+    detener = false;
 
 var board = new five.Board({
- // io: new Raspi()
+  //io: new Raspi()
 });
 
 board.on("ready", function() {
-  motorA1 = new five.Led("P1-13");
-  motorA2 = new five.Led("P1-15");
-  motorB1 = new five.Led("P1-16");
-  motorB2 = new five.Led("P1-18");
-//  led.blink();
+  motorA1 = new five.Led(9);
+  motorA2 = new five.Led(8);
+  motorB1 = new five.Led(5);
+  motorB2 = new five.Led(4);
+  on = new five.Led(13); 
+  on.blink();
 });
 
 //Socket connection handler
@@ -109,9 +129,41 @@ io.on('connection', function (socket) {
           //io.sockets.emit('setFrame',obj);
           socket.broadcast.emit('setFrame',obj)
         });
-
-
+	 socket.on('Iniciar',function(obj){
+          console.log('Datos'+obj);
+	  DistanciaUser = obj.Distancia;
+          Mover();
+	  detener=false;		
+        });	
+	socket.on('Detener',function(obj){
+          Detener();
+        });
     });
+
+
+function Mover(){
+  Distancia++;
+  motorA2.on();
+  motorB1.on();
+
+  setTimeout(function(){
+    if(Distancia<DistanciaUser){
+      Mover();
+    }else{
+      motorA2.off();
+      motorB1.off();
+      motorB2.on();
+      setTimeout(function(){Distancia=0;Mover()},1000);
+    }
+  },1000);
+}
+function Detener(){
+      detener=true;     
+      motorA1.off();
+      motorA2.off();
+      motorB1.off();
+      motorB2.off();
+}
 
 console.log('Waiting for connection');
 

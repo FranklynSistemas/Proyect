@@ -1,6 +1,41 @@
 body {
 	background-color: darkgray;
 }
+#contenido {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+#Right{
+    background-color: black;
+    color: white;
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    margin-left: 60%;
+    clear:none;
+    margin-top: 20px;
+    font-size: 20px
+}
+
+#Left{
+    background-color: black;
+    color: white;
+    position: absolute;
+    width: 100px;
+    height: 20px;
+    /*float:left;*/
+    clear:none;
+    margin-top: 20px;
+    margin-left: 10%;
+    font-size: 20px
+
+}
 
 #BotoneArriba {
 	background-image:url('../img/FlechaArriba.png');
@@ -40,4 +75,15 @@ body {
 
 #tdCentro{
     width: 1px;
+}
+
+.btn {
+    width:50%;
+    margin-bottom: 10px;
+    font-size: 20px;
+}
+
+#Tiempo {
+  width:2%;
+  text-align: center;
 }
